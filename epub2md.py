@@ -15,22 +15,18 @@ if path.isfile(filename) is False:
 if path.splitext(filename)[1] != '.epub':
     exit()
 
+data = epub.read_epub(filename)
+xhtmls = data.get_items_of_media_type('application/xhtml+xml')
+
 dirname = path.splitext(path.basename(filename))[0]
 
-if path.exists(dirname):
-    exit()
+if path.exists(dirname) is False:
+    mkdir(dirname)
 
-book = epub.read_epub(filename)
-xhtml = book.get_items_of_media_type('application/xhtml+xml')
-
-mkdir(dirname)
-
-for xhtml_obj in xhtml:
-    if xhtml_obj.get_name() != 'nav.xhtml':
-        chapname = path.splitext(xhtml_obj.get_name())[0]
+for xhtml in xhtmls:
+    chapname = path.splitext(xhtml.get_name())[0]
+    if chapname != 'nav':
         with open('./{}/{}.md'.format(dirname, chapname), 'w') as f:
             f.write(markdownify(
-                xhtml_obj.get_content().replace(
-                    b"xml version='1.0' encoding='utf-8'?",
-                    b""),
+                xhtml.get_body_content(),
                 strong_em_symbol="_"))
