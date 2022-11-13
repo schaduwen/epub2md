@@ -27,6 +27,4 @@ for xhtml in xhtmls:
     chapname = path.splitext(xhtml.get_name())[0]
     if chapname != 'nav':
         with open('./{}/{}.md'.format(dirname, chapname), 'w') as f:
-            f.write(markdownify(
-                xhtml.get_body_content(),
-                strong_em_symbol="_"))
+            f.write(markdownify(xhtml.get_body_content()))
