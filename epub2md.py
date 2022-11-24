@@ -1,22 +1,22 @@
-from sys import argv, exit
+from sys import argv
 from os import path, mkdir
 from ebooklib import epub
 from markdownify import markdownify
 
 
 if len(argv) <= 1:
-    exit()
+    raise SystemExit()
 
-filename = './{}'.format(argv[1])
+filename = argv[1]
 
 if path.isfile(filename) is False:
-    exit()
+    raise SystemExit()
 
 if path.splitext(filename)[1] != '.epub':
-    exit()
+    raise SystemExit()
 
-data = epub.read_epub(filename)
-xhtmls = data.get_items_of_media_type('application/xhtml+xml')
+_epub = epub.read_epub(filename)
+xhtmls = _epub.get_items_of_media_type('application/xhtml+xml')
 
 dirname = path.splitext(path.basename(filename))[0]
 
